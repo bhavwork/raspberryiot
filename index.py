@@ -1,7 +1,7 @@
 from flask import Flask
 import RPi.GPIO as GPIO
 
-app = Flask(__name__)
+app = Flask(__name__) 
 
 LED = 17  # BCM pin number
 
