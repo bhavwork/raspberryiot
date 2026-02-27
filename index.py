@@ -3,43 +3,67 @@ import RPi.GPIO as GPIO
 
 app = Flask(__name__)
 
-LED = 17  # BCM pin number
+LED1 = 17   # First LED
+LED2 = 27   # Second LED
 
 # GPIO setup
-GPIO.setwarnings(False)  # ignore warnings
-GPIO.setmode(GPIO.BCM)   # use BCM numbering
-GPIO.setup(LED, GPIO.OUT, initial=GPIO.LOW)  # LED starts OFF
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
 
-# Home page with buttons
+GPIO.setup(LED1, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(LED2, GPIO.OUT, initial=GPIO.LOW)
+
 @app.route('/')
 def home():
     return '''
-    <h1>LED Control</h1>
-    <a href="/on"><button>ON</button></a>
-    <a href="/off"><button>OFF</button></a>
-    <a href="/toggle"><button>TOGGLE</button></a>
+    <h1>2 LED Control</h1>
+    <h2>LED 1</h2>
+    <a href="/led1/on"><button>LED1 ON</button></a>
+    <a href="/led1/off"><button>LED1 OFF</button></a>
+    <a href="/led1/toggle"><button>LED1 TOGGLE</button></a>
+    
+    <h2>LED 2</h2>
+    <a href="/led2/on"><button>LED2 ON</button></a>
+    <a href="/led2/off"><button>LED2 OFF</button></a>
+    <a href="/led2/toggle"><button>LED2 TOGGLE</button></a>
     '''
 
-# Turn LED ON
-@app.route('/on')
-def led_on():
-    GPIO.output(LED, True)
-    return "LED ON"
+# -------- LED 1 --------
+@app.route('/led1/on')
+def led1_on():
+    GPIO.output(LED1, True)
+    return "LED1 ON"
 
-# Turn LED OFF
-@app.route('/off')
-def led_off():
-    GPIO.output(LED, False)
-    return "LED OFF"
+@app.route('/led1/off')
+def led1_off():
+    GPIO.output(LED1, False)
+    return "LED1 OFF"
 
-# Toggle LED state
-@app.route('/toggle')
-def led_toggle():
-    GPIO.output(LED, not GPIO.input(LED))
-    return f"LED is now {'ON' if GPIO.input(LED) else 'OFF'}"
+@app.route('/led1/toggle')
+def led1_toggle():
+    GPIO.output(LED1, not GPIO.input(LED1))
+    return f"LED1 is now {'ON' if GPIO.input(LED1) else 'OFF'}"
+
+
+# -------- LED 2 --------
+@app.route('/led2/on')
+def led2_on():
+    GPIO.output(LED2, True)
+    return "LED2 ON"
+
+@app.route('/led2/off')
+def led2_off():
+    GPIO.output(LED2, False)
+    return "LED2 OFF"
+
+@app.route('/led2/toggle')
+def led2_toggle():
+    GPIO.output(LED2, not GPIO.input(LED2))
+    return f"LED2 is now {'ON' if GPIO.input(LED2) else 'OFF'}"
+
 
 if __name__ == '__main__':
     try:
         app.run(host='0.0.0.0', port=5000)
     finally:
-        GPIO.cleanup()  # reset pins on exit
+        GPIO.cleanup()
